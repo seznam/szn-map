@@ -1,0 +1,61 @@
+<link rel="import" href="../szn-apis/szn-map-api.html" />
+
+<template>
+	<style>
+		:host {
+			display: block;
+		}
+	</style>
+	<content></content>
+</template>
+
+<script>
+(function() {
+	var doc = (document._currentScript || document.currentScript).ownerDocument;
+	var template = doc.querySelector("template");
+	var proto = Object.create(HTMLElement.prototype);
+
+	var createMap = function() {
+		var center, zoom;
+		if (this.hasAttribute("lat") && this.hasAttribute("lon")) {
+			center = SMap.Coords.fromWGS84(
+				parseFloat(this.getAttribute("lon")),
+				parseFloat(this.getAttribute("lat"))
+			);
+		}
+		if (this.hasAttribute("zoom")) { zoom = parseInt(this.getAttribute("zoom")); }
+		var api = new SMap(this, center, zoom);
+
+		for (var p in api) {
+			var val = api[p];
+			if (typeof(val) == "function" && p.charAt(0) != "_") { this[p] = api[p].bind(api); }
+		}
+
+		var layerNames = {};
+		layerNames["base"] = SMap.DEF_BASE;
+		layerNames["turist"] = SMap.DEF_TURIST;
+		layerNames["ophoto"] = SMap.DEF_OPHOTO;
+		layerNames["hybrid"] = SMap.DEF_HYBRID;
+		layerNames["historic"] = SMap.DEF_HISTORIC;
+		layerNames["bike"] = SMap.DEF_BIKE;
+		layerNames["trail"] = SMap.DEF_TRAIL;
+		(this.getAttribute("layers") || "base").split(/\W+/).forEach(function(name) {
+			if (name in layerNames) { this.addDefaultLayer(layerNames[name]).enable(); }
+		}, this);
+
+		if (this.hasAttribute("controls")) { this.addDefaultControls(); }		
+	}
+
+	proto.createdCallback = function() {
+		var root = this.createShadowRoot();
+		root.appendChild(template.content.cloneNode(true));
+		document.createElement("szn-map-api").load().then(createMap.bind(this));
+	}
+
+	proto.attachedCallback = function() {
+		this.syncPort && this.syncPort(); /* api might not be loaded yet */
+	}
+
+	document.registerElement("szn-map", {prototype:proto});
+})();
+</script>

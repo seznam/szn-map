@@ -1,0 +1,29 @@
+{
+  "name": "szn-map",
+  "version": "0.0.0",
+  "homepage": "https://github.com/seznam/szn-map",
+  "authors": [
+    "Ondrej Zara <ondrej.zara@firma.seznam.cz>"
+  ],
+  "description": "<szn-map> web component",
+  "main": "szn-map.html",
+  "keywords": [
+    "web",
+    "components",
+    "seznam",
+    "szn",
+    "map"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webcomponentsjs": "*",
+    "szn-apis": "*"
+  }
+}
