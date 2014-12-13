@@ -1,4 +1,4 @@
-szn-captcha
-===========
+szn-map
+=======
 
-&lt;szn-captcha> web component
+&lt;szn-map&gt; web component
